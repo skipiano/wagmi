@@ -6,9 +6,7 @@ import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../../../firebase/clientApp";
 import { FIREBASE_ERRORS } from "../../../firebase/errors";
 
-type LoginProps = {};
-
-const Login: React.FC<LoginProps> = () => {
+const Login: React.FC = () => {
     const setAuthModalState = useSetRecoilState(authModalState);
 
     const [loginForm, setLoginForm] = useState({
@@ -93,6 +91,40 @@ const Login: React.FC<LoginProps> = () => {
             >
                 Log In
             </Button>
+            <Flex fontSize="9pt" justifyContent="center" mb={2}>
+                <Text mr={1}>Have a wallet already?</Text>
+                <Text
+                    color="blue.500"
+                    fontWeight={700}
+                    cursor="pointer"
+                    onClick={() =>
+                        setAuthModalState((prev) => ({
+                            ...prev,
+                            view: "wallet",
+                        }))
+                    }
+                >
+                    CONNECT
+                </Text>
+            </Flex>
+            <Flex justifyContent="center" mb={2}>
+                <Text fontSize="9pt" mr={1}>
+                    Forgot your password?
+                </Text>
+                <Text
+                    color="blue.500"
+                    fontSize="9pt"
+                    cursor="pointer"
+                    onClick={() =>
+                        setAuthModalState((prev) => ({
+                            ...prev,
+                            view: "resetPassword",
+                        }))
+                    }
+                >
+                    Reset
+                </Text>
+            </Flex>
             <Flex fontSize="9pt" justifyContent="center">
                 <Text mr={1}>New here?</Text>
                 <Text

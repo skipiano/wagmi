@@ -18,6 +18,8 @@ import { authModalState } from "../../../atoms/authModalAtom";
 import { auth } from "../../../firebase/clientApp";
 import AuthInputs from "./AuthInputs";
 import OAuthButtons from "./OAuthButtons";
+import ResetPassword from "./ResetPassword";
+import WalletButtons from "./WalletButtons";
 
 const AuthModal: React.FC = () => {
     const [modalState, setModalState] = useRecoilState(authModalState);
@@ -44,6 +46,7 @@ const AuthModal: React.FC = () => {
                         {modalState.view === "signup" && "Signup"}
                         {modalState.view === "resetPassword" &&
                             "Reset Password"}
+                        {modalState.view === "wallet" && "Connect Wallet"}
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody
@@ -59,12 +62,29 @@ const AuthModal: React.FC = () => {
                             justify="center"
                             width="70%"
                         >
-                            {<OAuthButtons />}
-                            <Text color="gray.500" fontWeight={700}>
-                                OR
-                            </Text>
-                            {<AuthInputs />}
-                            {/* {<ResetPassword />} */}
+                            {modalState.view === "resetPassword" ? (
+                                <ResetPassword />
+                            ) : (
+                                <>
+                                    {modalState.view === "wallet" ? (
+                                        <>
+                                            <WalletButtons />
+                                            <AuthInputs />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <OAuthButtons />
+                                            <Text
+                                                color="gray.500"
+                                                fontWeight={700}
+                                            >
+                                                OR
+                                            </Text>
+                                            <AuthInputs />
+                                        </>
+                                    )}
+                                </>
+                            )}
                         </Flex>
                     </ModalBody>
                 </ModalContent>

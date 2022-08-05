@@ -1,17 +1,18 @@
 import { Button } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { authModalState } from "../../../atoms/authModalAtom";
 
 const AuthButtons: React.FC = () => {
     const setAuthModalState = useSetRecoilState(authModalState);
+
     return (
         <>
             <Button
                 variant="outline"
                 height="28px"
                 display={{ base: "none", sm: "flex" }}
-                width={{ base: "70px", md: "110px" }}
+                width={{ base: "80px", md: "130px" }}
                 mr={2}
                 onClick={() => setAuthModalState({ open: true, view: "login" })}
             >
@@ -19,14 +20,25 @@ const AuthButtons: React.FC = () => {
             </Button>
             <Button
                 height="28px"
-                display={{ base: "none", sm: "flex" }}
-                width={{ base: "70px", md: "110px" }}
+                display={{ base: "none", sm: "none", md: "flex" }}
+                width={{ base: "80px", md: "130px" }}
                 mr={2}
                 onClick={() =>
-                    setAuthModalState({ open: true, view: "signup" })
+                    setAuthModalState({ open: true, view: "wallet" })
                 }
             >
-                Sign Up
+                Connect Wallet
+            </Button>
+            <Button
+                height="28px"
+                display={{ base: "none", sm: "flex", md: "none" }}
+                width={{ base: "80px", md: "130px" }}
+                mr={2}
+                onClick={() =>
+                    setAuthModalState({ open: true, view: "wallet" })
+                }
+            >
+                Connect
             </Button>
         </>
     );

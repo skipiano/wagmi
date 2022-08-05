@@ -82,6 +82,21 @@ const SignUp: React.FC = () => {
                 }}
                 bg="gray.50"
             />
+            <Text
+                mt={2}
+                fontSize="9pt"
+                color="blue.500"
+                fontWeight={700}
+                cursor="pointer"
+                onClick={() =>
+                    setAuthModalState((prev) => ({
+                        ...prev,
+                        view: "login",
+                    }))
+                }
+            >
+                LOG IN
+            </Text>
             <Input
                 required
                 name="confirmPassword"
@@ -120,6 +135,22 @@ const SignUp: React.FC = () => {
             >
                 Sign Up
             </Button>
+            <Flex fontSize="9pt" justifyContent="center" mb={2}>
+                <Text mr={1}>Have a wallet already?</Text>
+                <Text
+                    color="blue.500"
+                    fontWeight={700}
+                    cursor="pointer"
+                    onClick={() =>
+                        setAuthModalState((prev) => ({
+                            ...prev,
+                            view: "wallet",
+                        }))
+                    }
+                >
+                    CONNECT
+                </Text>
+            </Flex>
             <Flex fontSize="9pt" justifyContent="center">
                 <Text mr={1}>Already have an account?</Text>
                 <Text
