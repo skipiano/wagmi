@@ -4,14 +4,16 @@ import Web3 from "web3";
 import axios from "axios";
 import { signInWithCustomToken } from "firebase/auth";
 import { auth } from "../../../firebase/clientApp";
+import Caver from "caver-js";
 
 const WalletButtons: React.FC = () => {
-    const [loading, setLoading] = useState(false);
+    const [metamaskLoading, setMetamaskLoading] = useState(false);
+    const [kaikasLoading, setKaikasLoading] = useState(false);
     const [error, setError] = useState("");
 
     const connectMetamask = async () => {
         setError("");
-        setLoading(true);
+        setMetamaskLoading(true);
         try {
             if (window?.ethereum?.isMetaMask) {
                 const accounts = (await window.ethereum.request({
@@ -31,7 +33,6 @@ const WalletButtons: React.FC = () => {
                     account,
                     ""
                 );
-                console.log(signature);
                 const jwtResponse = await axios.get(
                     `${baseURL}/jwt?address=${account}&signature=${signature}&network=eth`
                 );
@@ -52,17 +53,15 @@ const WalletButtons: React.FC = () => {
             console.log("connectMetamask error", error);
             setError(error);
         }
-        setLoading(false);
+        setMetamaskLoading(false);
     };
 
     const connectKaikas = async () => {
         setError("");
-        setLoading(true);
+        setKaikasLoading(true);
         try {
-            if (window?.ethereum?.isMetaMask) {
-                const accounts = (await window.ethereum.request({
-                    method: "eth_requestAccounts",
-                })) as string[];
+            if (window?.klaytn?.isKaikas) {
+                const accounts = await window.klaytn.enable();
                 const account = Web3.utils.toChecksumAddress(accounts[0]);
 
                 const baseURL =
@@ -99,7 +98,7 @@ const WalletButtons: React.FC = () => {
             console.log("connectKaikas error", error);
             setError(error);
         }
-        setLoading(false);
+        setKaikasLoading(false);
     };
 
     return (
@@ -107,8 +106,9 @@ const WalletButtons: React.FC = () => {
             <Button
                 variant="oauth"
                 mb={2}
-                isLoading={loading}
+                isLoading={metamaskLoading}
                 onClick={connectMetamask}
+                disabled={kaikasLoading}
             >
                 <Image src="/images/metamask.png" height="20px" mr={4}></Image>
                 Continue with Metamask
@@ -116,13 +116,14 @@ const WalletButtons: React.FC = () => {
             <Button
                 variant="oauth"
                 mb={2}
-                isLoading={loading}
+                isLoading={kaikasLoading}
                 onClick={connectKaikas}
+                disabled={metamaskLoading}
             >
                 <Image src="/images/kaikas.png" height="20px" mr={4}></Image>
                 Continue with Kaikas
             </Button>
-            {!loading && error && (
+            {!metamaskLoading && kaikasLoading && error && (
                 <Text textAlign="center" color="red" fontSize="10pt">
                     {error}
                 </Text>
