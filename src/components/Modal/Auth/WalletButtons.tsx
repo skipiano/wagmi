@@ -61,29 +61,20 @@ const WalletButtons: React.FC = () => {
         setKaikasLoading(true);
         try {
             if (window?.klaytn?.isKaikas) {
-                const accounts = await window.klaytn.enable();
-                const account = Web3.utils.toChecksumAddress(accounts[0]);
-
+                const caver = new Caver(window.klaytn);
+                const account = await window.klaytn.selectedAddress;
                 const baseURL =
                     "https://us-central1-wagmi-242e9.cloudfunctions.net/expressApi";
                 const response = await axios.get(
-                    `${baseURL}/message?address=${account}&network=eth`
+                    `${baseURL}/message?address=${account}&network=klay`
                 );
                 const messageToSign = response?.data?.messageToSign;
-                const web3 = new Web3(Web3.givenProvider);
-                const signature = await web3.eth.personal.sign(
-                    messageToSign,
-                    account,
-                    ""
-                );
-                console.log(signature);
+                const signature = await caver.klay.sign(messageToSign, account);
                 const jwtResponse = await axios.get(
-                    `${baseURL}/jwt?address=${account}&signature=${signature}&network=eth`
+                    `${baseURL}/jwt?address=${account}&signature=${signature}&network=klay`
                 );
-                console.log(jwtResponse);
 
                 const customToken = jwtResponse?.data?.customToken;
-                console.log(customToken);
                 if (!customToken) {
                     throw new Error("Invalid JWT");
                 }
