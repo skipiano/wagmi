@@ -54,7 +54,7 @@ const Comments: React.FC<CommentsProps> = ({
             const newComment: Comment = {
                 id: commentDocRef.id,
                 creatorId: user.uid,
-                creatorDisplayText: user.email!.split("@")[0],
+                creatorDisplayText: user.displayName!,
                 communityId,
                 postId: selectedPost?.id!,
                 postTitle: selectedPost?.title!,

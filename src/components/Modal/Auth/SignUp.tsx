@@ -19,14 +19,21 @@ const SignUp: React.FC = () => {
         useCreateUserWithEmailAndPassword(auth);
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if (error) setError("");
-        if (signUpForm.password !== signUpForm.confirmPassword) {
-            setError("Passwords do not match");
-            return;
-        }
+        try {
+            event.preventDefault();
+            if (error) setError("");
+            if (signUpForm.password !== signUpForm.confirmPassword) {
+                setError("Passwords do not match");
+                return;
+            }
 
-        createUserWithEmailAndPassword(signUpForm.email, signUpForm.password);
+            createUserWithEmailAndPassword(
+                signUpForm.email,
+                signUpForm.password
+            );
+        } catch (error: any) {
+            console.log("onSubmit error", error);
+        }
     };
 
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

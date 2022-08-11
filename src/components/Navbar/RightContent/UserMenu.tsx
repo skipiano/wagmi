@@ -59,8 +59,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
                                     mr={8}
                                 >
                                     <Text fontWeight={700}>
-                                        {user?.displayName ||
-                                            user.email?.split("@")[0]}
+                                        {user?.displayName}
                                     </Text>
                                     <Flex>
                                         <Icon

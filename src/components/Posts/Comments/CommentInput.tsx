@@ -25,7 +25,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
                     <Text mb={1}>
                         Comment as{" "}
                         <span style={{ color: "#3182CE" }}>
-                            {user?.email?.split("@")[0]}
+                            {user?.displayName}
                         </span>
                     </Text>
                     <Textarea
