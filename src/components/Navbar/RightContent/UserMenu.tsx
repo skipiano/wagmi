@@ -2,7 +2,6 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
     Menu,
     MenuButton,
-    Button,
     MenuList,
     MenuItem,
     Icon,
@@ -10,28 +9,56 @@ import {
     MenuDivider,
     Text,
 } from "@chakra-ui/react";
-import { signOut, User } from "firebase/auth";
-import React from "react";
-import { FaRedditSquare } from "react-icons/fa";
-import { VscAccount } from "react-icons/vsc";
-import { IoSparkles } from "react-icons/io5";
+import { signOut } from "firebase/auth";
+import React, { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
-import { MdOutlineLogin } from "react-icons/md";
-import { auth } from "../../../firebase/clientApp";
-import { useResetRecoilState, useSetRecoilState } from "recoil";
+import { FiSettings } from "react-icons/fi";
+import { MdOutlineLogin, MdOutlineDarkMode, MdDarkMode } from "react-icons/md";
+import { auth, firestore } from "../../../firebase/clientApp";
+import { useSetRecoilState } from "recoil";
 import { authModalState } from "../../../atoms/authModalAtom";
-import { communityState } from "../../../atoms/communitiesAtom";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
-type UserMenuProps = {
-    user?: User | null;
-};
-
-const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
+const UserMenu: React.FC = () => {
     const setAuthModalState = useSetRecoilState(authModalState);
+    const [user] = useAuthState(auth);
+    const [displayName, setDisplayName] = useState("");
+    const [darkMode, setDarkMode] = useState(false);
 
     const logout = async () => {
         await signOut(auth);
     };
+
+    const fetchUserData = async () => {
+        try {
+            const userSnap = await getDoc(doc(firestore, "users", user!.uid));
+            setDisplayName(userSnap.get("displayName"));
+            setDarkMode(userSnap.get("darkMode"));
+        } catch (error: any) {
+            console.log("fetchUserData error", error);
+        }
+    };
+
+    const toggleDarkMode = async () => {
+        try {
+            setDarkMode((prev) => !prev);
+            if (user) {
+                console.log(darkMode);
+                await setDoc(
+                    doc(firestore, "users", user.uid),
+                    { darkMode: !darkMode },
+                    { merge: true }
+                );
+            }
+        } catch (error: any) {
+            console.log("toggleDarkMode error", error);
+        }
+    };
+
+    useEffect(() => {
+        if (user) fetchUserData();
+    }, []);
 
     return (
         <Menu>
@@ -43,97 +70,73 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
             >
                 <Flex align="center">
                     <Flex align="center">
-                        {user ? (
-                            <>
-                                <Icon
-                                    as={FaRedditSquare}
-                                    mr={1}
-                                    color="gray.300"
-                                    fontSize={24}
-                                />
-                                <Flex
-                                    direction="column"
-                                    display={{ base: "none", lg: "flex" }}
-                                    fontSize="8pt"
-                                    align="flex-start"
-                                    mr={8}
-                                >
-                                    <Text fontWeight={700}>
-                                        {user?.displayName}
-                                    </Text>
-                                    <Flex>
-                                        <Icon
-                                            as={IoSparkles}
-                                            color="brand.100"
-                                            mr={1}
-                                        />
-                                        <Text color="gray.400">1 karma</Text>
-                                    </Flex>
-                                </Flex>
-                            </>
-                        ) : (
-                            <Icon
-                                as={VscAccount}
-                                fontSize={24}
-                                color="gray.400"
-                                mr={1}
-                            />
-                        )}
+                        <Icon
+                            as={CgProfile}
+                            mr={1}
+                            color="gray.500"
+                            fontSize={24}
+                        />
+                        <Flex
+                            direction="column"
+                            display={{ base: "none", lg: "flex" }}
+                            fontSize="8pt"
+                            align="flex-start"
+                            mr={8}
+                        >
+                            <Text fontWeight={700}>{displayName}</Text>
+                        </Flex>
                     </Flex>
                     <ChevronDownIcon />
                 </Flex>
             </MenuButton>
             <MenuList>
-                {user ? (
-                    <>
-                        <MenuItem
-                            fontSize="10pt"
-                            fontWeight={700}
-                            _hover={{ bg: "blue.500", color: "white" }}
-                        >
-                            <Flex>
-                                <Icon as={CgProfile} fontSize={20} mr={2} />
-                                Profile
-                            </Flex>
-                        </MenuItem>
-                        <MenuDivider />
-                        <MenuItem
-                            fontSize="10pt"
-                            fontWeight={700}
-                            _hover={{ bg: "blue.500", color: "white" }}
-                            onClick={logout}
-                        >
-                            <Flex>
-                                <Icon
-                                    as={MdOutlineLogin}
-                                    fontSize={20}
-                                    mr={2}
-                                />
-                                Log Out
-                            </Flex>
-                        </MenuItem>
-                    </>
-                ) : (
-                    <>
-                        <MenuItem
-                            fontSize="10pt"
-                            fontWeight={700}
-                            _hover={{ bg: "blue.500", color: "white" }}
-                            onClick={() =>
-                                setAuthModalState({ open: true, view: "login" })
-                            }
-                        >
-                            <Flex>
-                                <Icon
-                                    as={MdOutlineLogin}
-                                    fontSize={20}
-                                    mr={2}
-                                />
-                                Log In / Sign Up
-                            </Flex>
-                        </MenuItem>
-                    </>
-                )}
+                <MenuItem
+                    fontSize="10pt"
+                    fontWeight={700}
+                    _hover={{ bg: "blue.500", color: "white" }}
+                >
+                    <Flex>
+                        <Icon as={CgProfile} fontSize={20} mr={2} />
+                        Profile
+                    </Flex>
+                </MenuItem>
+                <MenuItem
+                    fontSize="10pt"
+                    fontWeight={700}
+                    _hover={{ bg: "blue.500", color: "white" }}
+                >
+                    <Flex>
+                        <Icon as={FiSettings} fontSize={20} mr={2} />
+                        Settings
+                    </Flex>
+                </MenuItem>
+                <MenuItem
+                    fontSize="10pt"
+                    fontWeight={700}
+                    _hover={{ bg: "blue.500", color: "white" }}
+                    onClick={toggleDarkMode}
+                >
+                    <Flex>
+                        <Icon
+                            as={darkMode ? MdDarkMode : MdOutlineDarkMode}
+                            fontSize={20}
+                            mr={2}
+                        />
+                        Dark Mode
+                    </Flex>
+                </MenuItem>
+                <MenuDivider />
+                <MenuItem
+                    fontSize="10pt"
+                    fontWeight={700}
+                    _hover={{ bg: "blue.500", color: "white" }}
+                    onClick={logout}
+                >
+                    <Flex>
+                        <Icon as={MdOutlineLogin} fontSize={20} mr={2} />
+                        Disconnect / Log Out
+                    </Flex>
+                </MenuItem>
             </MenuList>
         </Menu>
     );

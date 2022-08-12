@@ -26,10 +26,12 @@ const Navbar: React.FC = () => {
                 cursor="pointer"
                 onClick={() => onSelectMenuItem(defaultMenuItem)}
             >
-                <Image src="/images/redditFace.svg" height="30px" />
+                <Image />
+                <Image />
+                <Image src="/images/wagmi_logo.png" height="30px" />
                 <Image
-                    src="/images/redditText.svg"
-                    height="46px"
+                    src="/images/wagmi_text.png"
+                    height="30px"
                     display={{ base: "none", md: "unset" }}
                 />
             </Flex>
