@@ -8,23 +8,20 @@ import {
     where,
 } from "firebase/firestore";
 import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useRecoilValue } from "recoil";
-import { communityState } from "../atoms/communitiesAtom";
-import { Post, postState, PostVote } from "../atoms/postAtom";
-import Ad from "../components/Community/Ad";
+import { Post, PostVote } from "../atoms/postAtom";
+import AdLink from "../components/RightContent/AdLink";
 import CreatePostLink from "../components/Community/CreatePostLink";
-import PersonalHome from "../components/Community/PersonalHome";
-import Recommendations from "../components/Community/Recommendations";
+import PersonalHome from "../components/RightContent/PersonalHome";
+import Recommendations from "../components/RightContent/Recommendations";
 import PageContent from "../components/Layout/PageContent";
 import PostItem from "../components/Posts/PostItem";
 import PostLoader from "../components/Posts/PostLoader";
 import { auth, firestore } from "../firebase/clientApp";
 import useCommunityData from "../hooks/useCommunityData";
 import usePosts from "../hooks/usePosts";
+import PremiumLink from "../components/RightContent/PremiumLink";
 
 const Home: NextPage = () => {
     const [user, loadingUser] = useAuthState(auth);
@@ -156,7 +153,8 @@ const Home: NextPage = () => {
             </>
             <Stack spacing={5}>
                 <Recommendations />
-                <Ad />
+                <PremiumLink />
+                <AdLink />
                 <PersonalHome />
             </Stack>
         </PageContent>

@@ -2,7 +2,7 @@ import React from "react";
 import { Flex, Icon, Text, Stack, Button } from "@chakra-ui/react";
 import { GiCheckedShield } from "react-icons/gi";
 
-const Ad: React.FC = () => {
+const ProfileOverview: React.FC = () => {
     return (
         <Flex
             direction="column"
@@ -21,8 +21,8 @@ const Ad: React.FC = () => {
                     mt={2}
                 />
                 <Stack spacing={1} fontSize="9pt" pl={2}>
-                    <Text fontWeight={600}>Reddit Premium</Text>
-                    <Text>The best Reddit experience, with monthly Coins</Text>
+                    <Text fontWeight={600}>WAGMI Premium</Text>
+                    <Text>Hate ads? Want more features?</Text>
                 </Stack>
             </Flex>
             <Button height="30px" bg="brand.100">
@@ -31,4 +31,4 @@ const Ad: React.FC = () => {
         </Flex>
     );
 };
-export default Ad;
+export default ProfileOverview;

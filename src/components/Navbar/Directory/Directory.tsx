@@ -8,8 +8,7 @@ import {
     Text,
     Image,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
-import { TiHome } from "react-icons/ti";
+import React from "react";
 import useDirectory from "../../../hooks/useDirectory";
 import Communities from "./Communities";
 
