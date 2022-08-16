@@ -14,6 +14,10 @@ export const createUserDocument = functions.auth.user().onCreate(async (user) =>
                 karmaContent: [],
                 isWeb3: false,
                 createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                claimedWAG: 0,
+                totalWAG: 0,
+                wallets: [],
+                nameService: ""
             }
         );
     }
